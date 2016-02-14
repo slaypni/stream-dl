@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn;
+var path = require('path');
+var fs   = require('fs');
+
+var _ = require('lodash');
+
+var pdir = path.join(path.dirname(fs.realpathSync(__filename)), '..');
+var dist = path.join(pdir, 'dist');
+var bin = path.join(pdir, 'node_modules', '.bin');
+
+var env = process.env;
+env['PATH'] = bin + ':' + env.PATH;
+var args = _.concat('dist/dl.js', process.argv.slice(2));
+
+var ls = spawn('node', args, {
+  'env': env,
+  'stdio': 'inherit'
+});
