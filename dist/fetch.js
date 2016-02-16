@@ -1,11 +1,21 @@
 (function() {
-  var casper, host, hosts, settings, utils;
+  var casper, filedir, filename, fs, host, hosts, path, settings, system, utils;
+
+  casper = require('casper').create();
 
   utils = require('utils');
 
-  settings = require('./settings.json');
+  system = require('system');
 
-  casper = require('casper').create();
+  path = require('path');
+
+  fs = require('fs');
+
+  filename = fs.absolute(system.args[3]);
+
+  filedir = (filename.split(fs.separator)).slice(0, -1).join(fs.separator);
+
+  settings = require("" + filedir + fs.separator + "settings.json");
 
   hosts = casper.cli.args;
 

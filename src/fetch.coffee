@@ -1,8 +1,14 @@
-utils = require 'utils'
-
-settings = require './settings.json'
-
 casper = require('casper').create()
+
+utils = require 'utils'
+system = require 'system'
+path = require 'path'
+fs = require 'fs'
+
+filename = fs.absolute system.args[3]
+filedir = (filename.split fs.separator)[...-1].join fs.separator
+
+settings = require "#{filedir}#{fs.separator}settings.json"
 
 hosts = casper.cli.args
 return JSON.stringify {'err': 'No host specified'} if hosts.length == 0

@@ -6,7 +6,9 @@ url = require 'url'
 
 _ = require 'lodash'
 
-settings = require './settings.json'
+filedir = (path.dirname fs.realpathSync __filename)
+
+settings = require path.join filedir, 'settings.json'
 
 argv = require 'yargs'
   .usage 'Usage: stream-dl [options] <url>'
@@ -16,7 +18,6 @@ argv = require 'yargs'
   .help 'h'
   .alias 'h', 'help'
   .version ->
-    filedir = (path.dirname fs.realpathSync __filename)
     require(path.join filedir, '..', 'package.json').version
   .argv
 

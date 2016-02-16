@@ -1,5 +1,5 @@
 (function() {
-  var _, argv, childProcess, dl, fs, getOutputFileName, hlsDownloader, hlsMasterIndexHandler, m3uHandler, main, path, settings, url, urls, util,
+  var _, argv, childProcess, dl, filedir, fs, getOutputFileName, hlsDownloader, hlsMasterIndexHandler, m3uHandler, main, path, settings, url, urls, util,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   util = require('util');
@@ -14,11 +14,11 @@
 
   _ = require('lodash');
 
-  settings = require('./settings.json');
+  filedir = path.dirname(fs.realpathSync(__filename));
+
+  settings = require(path.join(filedir, 'settings.json'));
 
   argv = require('yargs').usage('Usage: stream-dl [options] <url>').nargs('o', 1).describe('o', 'Output file path').demand(1).help('h').alias('h', 'help').version(function() {
-    var filedir;
-    filedir = path.dirname(fs.realpathSync(__filename));
     return require(path.join(filedir, '..', 'package.json')).version;
   }).argv;
 
