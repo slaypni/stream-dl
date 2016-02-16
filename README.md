@@ -2,6 +2,12 @@ stream-dl
 =========
 Download streaming videos from websites.
 
+**stream-dl** takes an URL of a video player webpage.
+It loads the website internally to get a video URL.
+Finally, the obtained URL will be sent to *ffmpeg* for conversion.
+
+As of this moment, it only supports HLS protocol.
+
 Dependencies
 ------------
 These programs should be on the PATH.
