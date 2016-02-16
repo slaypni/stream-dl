@@ -12,7 +12,7 @@ var bin = path.join(pdir, 'node_modules', '.bin');
 
 var env = process.env;
 env['PATH'] = bin + ':' + env.PATH;
-var args = _.concat('dist/dl.js', process.argv.slice(2));
+var args = _.concat(path.join(dist, 'dl.js'), process.argv.slice(2));
 
 var ls = spawn('node', args, {
   'env': env,
