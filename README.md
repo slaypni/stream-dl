@@ -6,7 +6,7 @@ Download streaming videos from websites.
 It loads the website internally to get a video URL.
 Finally, the obtained URL will be sent to *ffmpeg* for conversion.
 
-As of this moment, it only supports HLS protocol.
+At this time, it only supports HLS protocol.
 
 Dependencies
 ------------
