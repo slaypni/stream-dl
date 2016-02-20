@@ -42,7 +42,7 @@
   };
 
   main = function() {
-    var cmd, fetchjs, i, iurl, j, len, opath, results;
+    var args, fetchjs, i, iurl, j, len, opath, results;
     results = [];
     for (i = j = 0, len = urls.length; j < len; i = ++j) {
       iurl = urls[i];
@@ -53,8 +53,8 @@
       }
       if (!iurl.match(/.+\.(m3u|m3u8)(\?.*)?$/)) {
         fetchjs = path.join(path.dirname(fs.realpathSync(__filename)), 'fetch.js');
-        cmd = "casperjs --engine=slimerjs '" + fetchjs + "' '" + iurl + "'";
-        results.push(childProcess.exec(cmd, function(err, stdout, stderr) {
+        args = ['--engine=slimerjs', fetchjs, iurl];
+        results.push(childProcess.execFile('casperjs', args, function(err, stdout, stderr) {
           var iurl_, out, ref, type;
           out = _.last(stdout.trim().split('\n'));
           ref = JSON.parse(out), iurl_ = ref.url, type = ref.type;
@@ -75,7 +75,7 @@
     }
     console.log("Input URL: " + iurl);
     console.log("Output File: " + opath);
-    return childProcess.exec("curl '" + iurl + "'", function(err, stdout, stderr) {
+    return childProcess.execFile('curl', [iurl], function(err, stdout, stderr) {
       var directives, entries, entry, field, fields, i, info, line, lines;
       lines = stdout.split('\n').map(function(line) {
         return line.trim();

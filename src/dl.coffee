@@ -42,8 +42,8 @@ main = ->
       continue
     if not iurl.match /.+\.(m3u|m3u8)(\?.*)?$/
       fetchjs = path.join (path.dirname fs.realpathSync __filename), 'fetch.js'
-      cmd = "casperjs --engine=slimerjs '#{fetchjs}' '#{iurl}'"
-      childProcess.exec cmd, (err, stdout, stderr) ->
+      args = ['--engine=slimerjs', fetchjs, iurl]
+      childProcess.execFile 'casperjs', args, (err, stdout, stderr) ->
         out = _.last (stdout.trim().split '\n')
         {url: iurl_, type} = JSON.parse out
         dl iurl_, opath, type
@@ -58,7 +58,7 @@ m3uHandler = (iurl, opath) ->
   console.log "Input URL: #{iurl}"
   console.log "Output File: #{opath}"
 
-  childProcess.exec "curl '#{iurl}'", (err, stdout, stderr) ->
+  childProcess.execFile 'curl', [iurl], (err, stdout, stderr) ->
     lines = stdout.split('\n').map (line) -> line.trim()
     return if '#EXTM3U' != lines[0]
     entries = for line, i in lines
