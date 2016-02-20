@@ -20,9 +20,11 @@
   hosts = casper.cli.args;
 
   if (hosts.length === 0) {
-    return JSON.stringify({
+    casper.echo(JSON.stringify({
       'err': 'No host specified'
-    });
+    }));
+    casper.exit();
+    return;
   }
 
   host = casper.cli.args[0];

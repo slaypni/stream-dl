@@ -11,7 +11,10 @@ filedir = (filename.split fs.separator)[...-1].join fs.separator
 settings = require "#{filedir}#{fs.separator}settings.json"
 
 hosts = casper.cli.args
-return JSON.stringify {'err': 'No host specified'} if hosts.length == 0
+if hosts.length == 0
+  casper.echo JSON.stringify {'err': 'No host specified'}
+  casper.exit()
+  return
 host = casper.cli.args[0]
 
 casper.options =

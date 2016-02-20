@@ -53,10 +53,11 @@
       }
       if (!iurl.match(/.+\.(m3u|m3u8)(\?.*)?$/)) {
         fetchjs = path.join(path.dirname(fs.realpathSync(__filename)), 'fetch.js');
-        cmd = "casperjs --engine=slimerjs '" + fetchjs + "' '" + iurl + "' | tail -n 1";
+        cmd = "casperjs --engine=slimerjs '" + fetchjs + "' '" + iurl + "'";
         results.push(childProcess.exec(cmd, function(err, stdout, stderr) {
-          var iurl_, ref, type;
-          ref = JSON.parse(stdout), iurl_ = ref.url, type = ref.type;
+          var iurl_, out, ref, type;
+          out = _.last(stdout.trim().split('\n'));
+          ref = JSON.parse(out), iurl_ = ref.url, type = ref.type;
           return dl(iurl_, opath, type);
         }));
       } else {

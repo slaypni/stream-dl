@@ -42,9 +42,10 @@ main = ->
       continue
     if not iurl.match /.+\.(m3u|m3u8)(\?.*)?$/
       fetchjs = path.join (path.dirname fs.realpathSync __filename), 'fetch.js'
-      cmd = "casperjs --engine=slimerjs '#{fetchjs}' '#{iurl}' | tail -n 1"
+      cmd = "casperjs --engine=slimerjs '#{fetchjs}' '#{iurl}'"
       childProcess.exec cmd, (err, stdout, stderr) ->
-        {url: iurl_, type} = JSON.parse stdout
+        out = _.last (stdout.trim().split '\n')
+        {url: iurl_, type} = JSON.parse out
         dl iurl_, opath, type
     else
       dl iurl, opath
