@@ -29,7 +29,7 @@
   getOutputFileName = function(name, host, i) {
     var fnames;
     if (name == null) {
-      name = _.last(host != null ? host.split(path.sep) : void 0);
+      name = _.last(host != null ? host.split('/') : void 0);
       name = name != null ? name.match(/(.+?)(\?.*)?$/)[1] : void 0;
       if (name == null) {
         return;

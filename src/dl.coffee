@@ -26,7 +26,7 @@ urls = argv._
 
 getOutputFileName = (name, host, i) ->
   if not name?
-    name = _.last host?.split(path.sep)
+    name = _.last host?.split('/')
     name = name?.match(/(.+?)(\?.*)?$/)[1]
     return if not name?
   if i >= 1
