@@ -1,5 +1,5 @@
 (function() {
-  var _, argv, childProcess, dl, filedir, fs, getOutputFileName, hlsDownloader, hlsMasterIndexHandler, m3uHandler, main, path, settings, url, urls, util,
+  var _, argv, childProcess, dl, filedir, fs, getOutputFileName, hlsDownloader, hlsMasterIndexHandler, m3uHandler, main, os, path, settings, url, urls, util,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   util = require('util');
@@ -11,6 +11,8 @@
   childProcess = require('child_process');
 
   url = require('url');
+
+  os = require('os');
 
   _ = require('lodash');
 
@@ -42,7 +44,7 @@
   };
 
   main = function() {
-    var args, fetchjs, i, iurl, j, len, opath, results;
+    var args, casperjs, cmd, exec, fetchjs, i, iurl, j, len, opath, results;
     results = [];
     for (i = j = 0, len = urls.length; j < len; i = ++j) {
       iurl = urls[i];
@@ -52,9 +54,12 @@
         continue;
       }
       if (!iurl.match(/.+\.(m3u|m3u8)(\?.*)?$/)) {
-        fetchjs = path.join(path.dirname(fs.realpathSync(__filename)), 'fetch.js');
+        casperjs = path.join(filedir, '..', 'node_modules', '.bin', 'casperjs');
+        fetchjs = path.join(filedir, 'fetch.js');
         args = ['--engine=slimerjs', fetchjs, iurl];
-        results.push(childProcess.execFile('casperjs', args, function(err, stdout, stderr) {
+        cmd = [casperjs, args.join(' ')].join(' ');
+        exec = os.platform() !== 'win32' ? childProcess.execFile.bind(void 0, 'casperjs', args) : childProcess.exec.bind(void 0, cmd);
+        results.push(exec(function(err, stdout, stderr) {
           var iurl_, out, ref, type;
           out = _.last(stdout.trim().split('\n'));
           ref = JSON.parse(out), iurl_ = ref.url, type = ref.type;
@@ -68,14 +73,18 @@
   };
 
   m3uHandler = function(iurl, opath) {
-    var extname;
+    var args, extname;
     extname = path.extname(opath);
     if (extname === '.m3u' || extname === '.m3u8' || extname === '') {
       opath = (_.trimEnd(opath, extname)) + '.mp4';
     }
     console.log("Input URL: " + iurl);
     console.log("Output File: " + opath);
-    return childProcess.execFile('curl', [iurl], function(err, stdout, stderr) {
+    args = [iurl];
+    if (os.platform() === 'win32') {
+      args = _.concat(['-k'], args);
+    }
+    return childProcess.execFile('curl', args, function(err, stdout, stderr) {
       var directives, entries, entry, field, fields, i, info, line, lines;
       lines = stdout.split('\n').map(function(line) {
         return line.trim();

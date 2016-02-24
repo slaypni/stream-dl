@@ -3,6 +3,7 @@ path = require 'path'
 fs = require 'fs'
 childProcess = require 'child_process'
 url = require 'url'
+os = require 'os'
 
 _ = require 'lodash'
 
@@ -41,9 +42,14 @@ main = ->
       console.error 'Invalid output path'
       continue
     if not iurl.match /.+\.(m3u|m3u8)(\?.*)?$/
-      fetchjs = path.join (path.dirname fs.realpathSync __filename), 'fetch.js'
+      casperjs = path.join filedir, '..', 'node_modules', '.bin', 'casperjs'
+      fetchjs = path.join filedir, 'fetch.js'
       args = ['--engine=slimerjs', fetchjs, iurl]
-      childProcess.execFile 'casperjs', args, (err, stdout, stderr) ->
+      cmd = [casperjs, args.join(' ')].join(' ')
+      exec = if os.platform() != 'win32'
+      then childProcess.execFile.bind undefined, 'casperjs', args
+      else childProcess.exec.bind undefined, cmd
+      exec (err, stdout, stderr) ->
         out = _.last (stdout.trim().split '\n')
         {url: iurl_, type} = JSON.parse out
         dl iurl_, opath, type
@@ -58,7 +64,9 @@ m3uHandler = (iurl, opath) ->
   console.log "Input URL: #{iurl}"
   console.log "Output File: #{opath}"
 
-  childProcess.execFile 'curl', [iurl], (err, stdout, stderr) ->
+  args = [iurl]
+  args = _.concat ['-k'], args if os.platform() == 'win32'
+  childProcess.execFile 'curl', args, (err, stdout, stderr) ->
     lines = stdout.split('\n').map (line) -> line.trim()
     return if '#EXTM3U' != lines[0]
     entries = for line, i in lines
