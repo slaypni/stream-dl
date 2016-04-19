@@ -120,7 +120,7 @@ hlsDownloader = (input, output) ->
 dl = (iurl, opath, type) ->
   return if not iurl?
   if not type?
-    type = iurl.match(/.+\.(.+?)$/)?[1]
+    type = iurl.match(/.+\.(.+?)(\?.*)?$/)?[1]
   if type in ['m3u', 'm3u8']
     m3uHandler iurl, opath
 

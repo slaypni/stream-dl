@@ -170,7 +170,7 @@
       return;
     }
     if (type == null) {
-      type = (ref = iurl.match(/.+\.(.+?)$/)) != null ? ref[1] : void 0;
+      type = (ref = iurl.match(/.+\.(.+?)(\?.*)?$/)) != null ? ref[1] : void 0;
     }
     if (type === 'm3u' || type === 'm3u8') {
       return m3uHandler(iurl, opath);
