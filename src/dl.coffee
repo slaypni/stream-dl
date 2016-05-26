@@ -106,6 +106,7 @@ hlsDownloader = (input, output) ->
   console.log "Download URL: #{input}"
   cmd = [
     '-y'
+    '-headers', "User-Agent: #{settings.userAgent}\r\n"
     '-user-agent', settings.userAgent
     '-i', input
     '-c', 'copy'

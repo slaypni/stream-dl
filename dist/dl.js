@@ -153,7 +153,7 @@
   hlsDownloader = function(input, output) {
     var cmd, ls;
     console.log("Download URL: " + input);
-    cmd = ['-y', '-user-agent', settings.userAgent, '-i', input, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', output];
+    cmd = ['-y', '-headers', "User-Agent: " + settings.userAgent + "\r\n", '-user-agent', settings.userAgent, '-i', input, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', output];
     ls = childProcess.spawn('ffmpeg', cmd, {
       'stdio': 'inherit'
     });
